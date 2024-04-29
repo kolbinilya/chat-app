@@ -11,6 +11,7 @@ const Message = ({message, previousMessage}) => {
 	const chatColor = isFromMe ? "chat-bubble-success" : ""
 	const chatAvatar = isFromMe ? user.profilePic : selectedConversation.profilePic
 
+	const shakeClass = message.shouldShake ? "shake" : ''
 	// solve previous message avatar
 
 	return (
@@ -22,11 +23,10 @@ const Message = ({message, previousMessage}) => {
 					</div>
 				</div>
 				<div style={{wordWrap: 'break-word'}}
-						 className={`chat-bubble max-w-[350px] ${chatColor}`}>{message.message}</div>
+						 className={`chat-bubble max-w-[350px] ${chatColor} ${shakeClass}`}>{message.message}</div>
 				<div className="chat-footer opacity-50">{formattedTime(message.createdAt)}</div>
 			</div>
-	)
-			;
+	);
 };
 
 export default Message;

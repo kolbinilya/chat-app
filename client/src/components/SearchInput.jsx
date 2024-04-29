@@ -13,8 +13,8 @@ const SearchInput = ({setFilteredUsers, originalUsers}) => {
 	}, [search]);
 
 	return (
-			<form className='block mb-4'>
-				<label className="input input-bordered flex items-center gap-2">
+			<form className='block mb-2'>
+				<label className="input input-bordered flex items-center gap-2 p-2">
 					<input
 							value={search}
 							onChange={(e) => setSearch(e.target.value)}

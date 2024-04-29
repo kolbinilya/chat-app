@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Messages from './Messages';
 import MessageInput from "./MessageInput";
 import NoChatSelected from "./NoChatSelected";
@@ -8,21 +8,24 @@ const MessageContainer = () => {
 	const {selectedConversation, setSelectedConversation} = useConversation()
 
 	return (
-			<div className='md:min-w-[450px] flex flex-col '>
+			<div className='md:min-w-[450px] flex flex-col bg-gray-600'>
 				{!selectedConversation ? (
 						<NoChatSelected/>
 				) : (
 						<>
-							<header className='flex item-center justify-between bg-gray-400 px-4 py-2 mb-2'>
-								<div>
-									<span className='text-gray-900'>To: </span><span
-										className='text-gray-900 font-bold'>{selectedConversation.username}</span>
-								</div>
+							<header className='flex item-center justify-between bg-gray-800 p-4 mb-2'>
+								{selectedConversation && (
+										<div className='flex items-center gap-2'>
+											<img className='w-6 h-6' src={selectedConversation.profilePic}/>
+											<p>{selectedConversation.username}</p>
+											<p className='text-gray-300'>online</p>
+										</div>
+								)}
 
-								<button onClick={() => setSelectedConversation(null)} className="btn rounded-full">
-									<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24"
-											 stroke="currentColor">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+								<button onClick={() => setSelectedConversation(null)}>
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+											 stroke="currentColor" className="w-6 h-6">
+										<path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12"/>
 									</svg>
 								</button>
 

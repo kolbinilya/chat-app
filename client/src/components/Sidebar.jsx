@@ -7,6 +7,7 @@ import {useAuthContext} from "../context/AuthContext";
 
 const Sidebar = () => {
 	const navigate = useNavigate();
+	const {user} = useAuthContext();
 	const [users, setUsers] = useState([]);
 	const [filteredUsers, setFilteredUsers] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -46,7 +47,7 @@ const Sidebar = () => {
 	}
 
 	return (
-			<div className='border-r border-gray-200 relative p-2'>
+			<div className='border-r border-gray-200 relative p-2 bg-gray-600'>
 				<SearchInput
 						users={users}
 						setUsers={setUsers}
@@ -59,8 +60,15 @@ const Sidebar = () => {
 					<Conversations loading={loading} users={filteredUsers.length > 0 ? filteredUsers : users}/>
 				</div>
 
-				<div className='absolute bottom-0 left-0 right-0 bg-gray-400 px-2 z-50'>
-					<button onClick={logout} className='mt-2'>
+				<div className='absolute bottom-0 left-0 right-0 bg-gray-800 p-4 z-50 flex items-center justify-center'>
+					{user && (
+							<div className='flex items-center gap-2'>
+								<img className='w-6 h-6' src={user.profilePic}/>
+								<p>{user.username}</p>
+								<p className='text-gray-300'>online</p>
+							</div>
+					)}
+					<button onClick={logout} className='block ml-auto'>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
 								 stroke="currentColor" className="w-6 h-6">
 							<path strokeLinecap="round" strokeLinejoin="round"

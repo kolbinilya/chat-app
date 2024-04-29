@@ -2,12 +2,23 @@ import React from 'react';
 import Message from '../components/Message';
 import useConversation from "../storeZustand/useConversation";
 import {useRef, useEffect} from "react";
+import {useSocketContext} from "../context/SocketContext";
 
 
 const Messages = () => {
-	const {messages} = useConversation()
-
+	const {messages, setMessages} = useConversation()
 	const chatContainerRef = useRef(null);
+	const {socket} = useSocketContext()
+
+	useEffect(() => {
+		socket?.on("newMessage", (newMessage) => {
+			newMessage.shouldShake = true
+			setMessages([...messages, newMessage])
+		})
+
+		return () => socket?.off("newMessage")
+	}, [socket, setMessages, messages])
+
 
 	useEffect(() => {
 		if (chatContainerRef.current) {
