@@ -20,6 +20,7 @@ export const signup = async (req, res) => {
 		// profile pick with avatar placeholder
 		const avatarM = `https://avatar.iran.liara.run/public/boy?username=${username}`
 		const avatarW = `https://avatar.iran.liara.run/public/girl?username=${username}`
+
 		const newUser = new UserModel({
 			username,
 			password: hashedPassword,
@@ -28,7 +29,7 @@ export const signup = async (req, res) => {
 		})
 
 		if (newUser) {
-			generateTokenAndSetCookie(newUser._id, res)
+			generateTokenAndSetCookie(newUser._id, res);
 			await newUser.save();
 		}
 
@@ -55,6 +56,7 @@ export const login = async (req, res) => {
 		if (!isPasswordValid) {
 			return res.status(400).json({message: "Wrong credentials"});
 		}
+
 		generateTokenAndSetCookie(user._id, res)
 
 		res.status(200).json({

@@ -1,18 +1,66 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import SearchInput from "./SearchInput";
 import Conversations from "./Conversations";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {useAuthContext} from "../context/AuthContext";
 
 const Sidebar = () => {
+	const navigate = useNavigate();
+	const [users, setUsers] = useState([]);
+	const [filteredUsers, setFilteredUsers] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const {setUser} = useAuthContext();
+
+	// Состояние для хранения исходного списка пользователей
+	const [originalUsers, setOriginalUsers] = useState([]);
+
+	useEffect(() => {
+		async function fetchUsers() {
+			setLoading(true)
+			try {
+				const {data} = await axios.get('/api/users')
+				setUsers(data);
+				setOriginalUsers(data); // Сохраняем исходный список
+			} catch (e) {
+				console.log(e)
+			} finally {
+				setLoading(false)
+			}
+		}
+
+		fetchUsers();
+	}, []);
+
+	const logout = async () => {
+		try {
+			const {data} = await axios.post("/api/auth//logout");
+			if (data.message === 'Logged out successfully') {
+				localStorage.removeItem('user');
+				setUser(null)
+				navigate('/login')
+			}
+		} catch (e) {
+			console.log(e)
+		}
+	}
+
 	return (
 			<div className='border-r border-gray-200 relative p-2'>
-				<SearchInput/>
+				<SearchInput
+						users={users}
+						setUsers={setUsers}
+						filteredUsers={filteredUsers}
+						setFilteredUsers={setFilteredUsers}
+						originalUsers={originalUsers} // Передаем исходный список пользователей
+				/>
 
 				<div className='overflow-hidden overflow-y-scroll h-full'>
-					<Conversations/>
+					<Conversations loading={loading} users={filteredUsers.length > 0 ? filteredUsers : users}/>
 				</div>
 
 				<div className='absolute bottom-0 left-0 right-0 bg-gray-400 px-2 z-50'>
-					<button className='mt-2'>
+					<button onClick={logout} className='mt-2'>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
 								 stroke="currentColor" className="w-6 h-6">
 							<path strokeLinecap="round" strokeLinejoin="round"
@@ -20,7 +68,7 @@ const Sidebar = () => {
 						</svg>
 					</button>
 				</div>
-				
+
 			</div>
 	);
 };
